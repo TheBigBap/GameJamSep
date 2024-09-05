@@ -1,0 +1,102 @@
+[gd_scene load_steps=10 format=3 uid="uid://dtr17lp0ic5hi"]
+
+[ext_resource type="Script" path="res://pa_model.gd" id="1_t2j54"]
+[ext_resource type="Script" path="res://PA_carp.gd" id="1_w5wn7"]
+[ext_resource type="Script" path="res://Camera2D.gd" id="2_m4458"]
+
+[sub_resource type="Curve" id="Curve_vee7w"]
+_data = [Vector2(0.0568182, 0.185146), 0.0, 0.0, 0, 0, Vector2(0.314935, 0.741506), 0.0, 0.0, 0, 0, Vector2(0.642857, 0.560047), 0.0, 0.0, 0, 0, Vector2(1, 0.0875691), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cd50t"]
+
+[sub_resource type="Curve" id="Curve_id3el"]
+max_value = 3.0
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.934701, 2.80949), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_iip2r"]
+curve = SubResource("Curve_id3el")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ohh8n"]
+particle_flag_disable_z = true
+inherit_velocity_ratio = -1.0
+gravity = Vector3(0, 0, 0)
+scale_over_velocity_curve = SubResource("CurveTexture_iip2r")
+turbulence_enabled = true
+collision_mode = 1
+collision_friction = 0.0
+collision_bounce = 0.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_g13t8"]
+
+[node name="PA_model" type="CharacterBody2D"]
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("1_t2j54")
+
+[node name="PA_carp" type="Line2D" parent="." groups=["dark", "player"]]
+width = 0.0
+default_color = Color(0, 0, 0, 1)
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+script = ExtResource("1_w5wn7")
+max_rotation_angle = 90.0
+collision_radius = 8.0
+collision_push_force = 1.0
+triangle_rotation_offset = 270.0
+
+[node name="PA_carp2" type="Line2D" parent="PA_carp"]
+visible = false
+z_index = -1
+position = Vector2(5, -5)
+width = 15.0
+width_curve = SubResource("Curve_vee7w")
+default_color = Color(0, 0, 0, 0.862745)
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+script = ExtResource("1_w5wn7")
+
+[node name="item_area" type="Area2D" parent="PA_carp"]
+
+[node name="item_area" type="CollisionShape2D" parent="PA_carp/item_area"]
+shape = SubResource("CircleShape2D_cd50t")
+debug_color = Color(0.627451, 0.529412, 0.0705882, 1)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="PA_carp"]
+
+[node name="ItemCounterLabel" type="Label" parent="PA_carp/CanvasLayer"]
+modulate = Color(0.192157, 0.145098, 0.180392, 0.282353)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -23.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_vertical = 8
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="PA_carp"]
+amount = 20
+process_material = SubResource("ParticleProcessMaterial_ohh8n")
+lifetime = 5.0
+trail_enabled = true
+trail_lifetime = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_g13t8")
+
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("line2d", "camera2d")]
+limit_smoothed = true
+position_smoothing_enabled = true
+rotation_smoothing_enabled = true
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+script = ExtResource("2_m4458")
+line2d = NodePath("../PA_carp")
+camera2d = NodePath(".")

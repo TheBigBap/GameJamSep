@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://bqrtb8t3b0jwy"]
+
+[ext_resource type="Script" path="res://item_test.gd" id="1_a6nwr"]
+[ext_resource type="Texture2D" uid="uid://yojb7nps07m7" path="res://icon.svg" id="2_juyj2"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_icr3e"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_juyj2")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_578ce"]
+
+[node name="item_test" type="Area2D" groups=["item"]]
+modulate = Color(0, 0, 0, 1)
+self_modulate = Color(0, 0, 0, 1)
+collision_layer = 3
+collision_mask = 3
+script = ExtResource("1_a6nwr")
+item_type = "item_type_2"
+item_value = "5"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.296875, 0.296875)
+sprite_frames = SubResource("SpriteFrames_icr3e")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_578ce")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
